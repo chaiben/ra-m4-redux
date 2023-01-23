@@ -23,6 +23,11 @@ function Houses() {
       {reqStatus === 'failed' && <div>Error</div>}
       {reqStatus === 'success' && (
         <Grid gridGap="32px">
+          {/* FilteredIds no debería de estar aquí */}
+          {/* Usa algo parecido a lo siguiente:
+                allIds
+                    .filter((id) => filterHouse(byIds[id]), type, city, ...) --> filtra aquí y que venga de helpers, no del slice
+                    .map(...) */}
           {filteredIds(houses).map((id) => (
             <HouseCard
               key={id}
