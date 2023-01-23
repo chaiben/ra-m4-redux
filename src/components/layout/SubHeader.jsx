@@ -1,5 +1,8 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 import styled from 'styled-components'
+import { capitalize } from '../../helpers/'
+import { getHouses, updateFilters } from '../../store/houses.slice'
 import { colors, Container, dimensions, FlexBox } from '../../styles'
 import { Button, Icon } from '../atoms'
 import { SelectGroup } from '../molecules'
@@ -27,6 +30,26 @@ const FormStyled = styled(FlexBox).attrs({ as: 'form' })`
 `
 
 function SubHeader({ ...props }) {
+  const [formFilters, setFormFilters] = useState({})
+  const dispatch = useDispatch()
+  const houses = useSelector((state) => state.houses.houses)
+
+  const onChangeFormFilter = (event) => {
+    setFormFilters((prevFormFilters) => {
+      prevFormFilters[event.target.id] = event.target.value
+      return prevFormFilters
+    })
+  }
+
+  const onClickSearchForm = () => {
+    // Guardo en la store una cópia del valor del filtro.
+    dispatch(updateFilters({ ...formFilters }))
+  }
+
+  useEffect(() => {
+    dispatch(getHouses())
+  }, [dispatch])
+
   return (
     <SubHeaderStyled {...props}>
       <Container>
@@ -36,26 +59,30 @@ function SubHeader({ ...props }) {
             label="Tipo"
             defaultText="Piso, chalet o garaje..."
             hideLabel
-            options={[
-              { value: 'piso', text: 'Piso' },
-              { value: 'garaje', text: 'Garaje' },
-              { value: 'chalets', text: 'Chalets' },
-            ]}
+            onChange={onChangeFormFilter}
+            options={Object.keys(houses.type)
+              .sort()
+              .map((element) => ({
+                value: element,
+                text: capitalize(element),
+              }))}
           />
 
           <SelectGroup
-            id="ciudad"
+            id="city"
             label="Ciudad"
             defaultText="Madrid, Barcelona o Zaragoza..."
             hideLabel
-            options={[
-              { value: 'barcelona', text: 'Barcelona' },
-              { value: 'madrid', text: 'Madrid' },
-              { value: 'zaragoza', text: 'Zaragoza' },
-            ]}
+            onChange={onChangeFormFilter}
+            options={Object.keys(houses.city)
+              .sort()
+              .map((element) => ({
+                value: element,
+                text: capitalize(element),
+              }))}
           />
 
-          <Button>
+          <Button onClick={onClickSearchForm}>
             <Icon icon="search" />
           </Button>
         </FormStyled>
