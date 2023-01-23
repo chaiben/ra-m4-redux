@@ -1,20 +1,12 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import { urls } from '../constants'
+import { intersection, removeEmptyAttributes } from '../helpers'
 
-export const getHouses = createAsyncThunk(
-  'houses/getHouses',
-  async () => {
-    const res = await fetch(urls.houses)
-    const data = await res.json()
-    return data
-  }
-)
-
-const intersection = (arr1, arr2) => {
-  return arr1.filter((element) => {
-    return arr2.indexOf(element) !== -1
-  })
-}
+export const getHouses = createAsyncThunk('houses/getHouses', async () => {
+  const res = await fetch(urls.houses)
+  const data = await res.json()
+  return data
+})
 
 const initialState = {
   reqStatus: 'initial',
@@ -24,8 +16,8 @@ const initialState = {
     type: {},
     city: {},
     filters: {},
-    filteredIds: []
-  }
+    filteredIds: [],
+  },
 }
 
 export const housesSlice = createSlice({
@@ -33,24 +25,28 @@ export const housesSlice = createSlice({
   initialState,
   reducers: {
     updateFilters: (state, action) => {
-      state.houses.filters = action.payload
-
+      state.houses.filters = removeEmptyAttributes(action.payload)
+      state.houses.filteredIds = []
       if (Object.keys(state.houses.filters).length) {
-        for (const [filter, value] of Object.entries(state.houses.filters)) {
+        Object.keys(state.houses.filters).forEach((filter) => {
+          const value = state.houses.filters[filter]
           state.houses.filteredIds = !state.houses.filteredIds.length
             ? state.houses[filter][value]
-            : intersection(state.houses.filteredIds, state.houses[filter][value])
-        }
+            : intersection(
+                state.houses.filteredIds,
+                state.houses[filter][value],
+              )
+        })
       }
     },
   },
   extraReducers: (builder) => {
-    builder.addCase(getHouses.pending, (state, action) => {
+    builder.addCase(getHouses.pending, (state) => {
       state.reqStatus = 'loading'
     })
     builder.addCase(getHouses.fulfilled, (state, action) => {
       state.reqStatus = 'success'
-      action.payload.forEach(house => {
+      action.payload.forEach((house) => {
         state.houses.byId[house.id] = house
         if (!state.houses.allIds.includes(house.id)) {
           state.houses.allIds.push(house.id)
@@ -69,11 +65,11 @@ export const housesSlice = createSlice({
         }
       })
     })
-    builder.addCase(getHouses.rejected, (state, action) => {
+    builder.addCase(getHouses.rejected, (state) => {
       state.reqStatus = 'failed'
     })
-  }
-},)
+  },
+})
 
 // Action creators are generated for each case reducer function
 export const { updateFilters } = housesSlice.actions

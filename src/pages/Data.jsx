@@ -3,12 +3,6 @@ import { useSelector } from 'react-redux'
 import { Body } from '../components/layout'
 import { Text } from '../components/atoms'
 
-const intersection = (arr1, arr2) => {
-  return arr1.filter((element) => {
-    return arr2.indexOf(element) !== -1
-  })
-}
-
 function Data() {
   const houses = useSelector((state) => state.houses.houses)
   const { allIds, byId, filteredIds, filters } = houses
