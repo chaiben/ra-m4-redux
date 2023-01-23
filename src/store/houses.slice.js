@@ -2,6 +2,7 @@ import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import { urls } from '../constants'
 import { intersection, removeEmptyAttributes } from '../helpers'
 
+// Solo faltaria un try/catch con un reject para el caso de error, como en la documentación de redux-toolkit
 export const getHouses = createAsyncThunk(
   'houses/getHouses',
   async (options = { page: 1, limit: 9 }) => {
@@ -15,17 +16,18 @@ export const getHouses = createAsyncThunk(
 )
 
 const initialState = {
-  reqStatus: 'initial',
+  reqStatus: 'initial', // Añade isError, isSuccess, isLoading, para que sea más fácil de usar la API
   hasMore: true,
   houses: {
     byId: {},
     allIds: [],
-    type: {},
-    city: {},
-    filters: {}
+    type: {}, // Deberían de ser un string u objeto
+    city: {}, // Deberían de ser un string u objeto
+    filters: {}, // No filtres aquí
   },
 }
 
+// Demasiado dificil de leer. Elimina
 export const filteredIds = (stateHouse) => {
   let filteredIds = []
   const filters = removeEmptyAttributes(stateHouse.filters)
@@ -35,10 +37,7 @@ export const filteredIds = (stateHouse) => {
       const value = filters[filter]
       filteredIds = !filteredIds.length
         ? stateHouse[filter][value]
-        : intersection(
-          filteredIds,
-          stateHouse[filter][value],
-        )
+        : intersection(filteredIds, stateHouse[filter][value])
     })
     console.log('filteredIds', filteredIds)
     return filteredIds
@@ -51,6 +50,7 @@ export const housesSlice = createSlice({
   name: 'houses',
   initialState,
   reducers: {
+    // Mejor dos, uno de setCity y otro de setType
     updateFilters: (state, action) => {
       state.houses.filters = removeEmptyAttributes(action.payload)
     },
@@ -66,13 +66,13 @@ export const housesSlice = createSlice({
         state.houses.byId[house.id] = house
         if (!state.houses.allIds.includes(house.id)) {
           state.houses.allIds.push(house.id)
-          // type
+          // type -> SOBRA
           if (state.houses.type[house.type] === undefined) {
             state.houses.type[house.type] = [house.id]
           } else {
             state.houses.type[house.type].push(house.id)
           }
-          // city
+          // city -> SOBRA
           if (state.houses.city[house.city] === undefined) {
             state.houses.city[house.city] = [house.id]
           } else {

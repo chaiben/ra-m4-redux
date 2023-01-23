@@ -76,6 +76,8 @@ function SubHeader({ ...props }) {
             onChange={onChangeFormFilter}
             options={Object.keys(houses.city)
               .sort()
+              // Parece identica a la función de arriba, ¿no?
+              // Intenta reutilizar
               .map((element) => ({
                 value: element,
                 text: capitalize(element),
