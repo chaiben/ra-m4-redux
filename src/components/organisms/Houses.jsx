@@ -4,7 +4,8 @@ import styled from 'styled-components'
 import { Button } from '../atoms'
 import { HouseCard } from '../molecules'
 import { FlexBox, Grid } from '../../styles'
-import { getHouses } from '../../store/houses.slice'
+import { filteredIds, getHouses } from '../../store/houses.slice'
+import { useEffect } from 'react'
 
 const HousesStyled = styled(FlexBox)``
 
@@ -12,6 +13,9 @@ function Houses() {
   const [currentPage, setCurrentPage] = useState(1)
   const { houses, reqStatus, hasMore } = useSelector((state) => state.houses)
   const dispatch = useDispatch()
+  useEffect(() => {
+    dispatch(getHouses({ page: currentPage, limit: 9 }))
+  }, [dispatch, currentPage])
 
   return (
     <HousesStyled>
@@ -19,7 +23,7 @@ function Houses() {
       {reqStatus === 'failed' && <div>Error</div>}
       {reqStatus === 'success' && (
         <Grid gridGap="32px">
-          {houses.filteredIds.map((id) => (
+          {filteredIds(houses).map((id) => (
             <HouseCard
               key={id}
               title={houses.byId[id].title}
@@ -34,10 +38,7 @@ function Houses() {
         {hasMore && (
           <Button
             style={{ marginTop: '2rem' }}
-            onClick={() => {
-              setCurrentPage(currentPage + 1)
-              dispatch(getHouses({ page: currentPage, limit: 9 }))
-            }}
+            onClick={() => setCurrentPage(currentPage + 1)}
           >
             Load more
           </Button>

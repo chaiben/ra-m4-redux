@@ -22,9 +22,29 @@ const initialState = {
     allIds: [],
     type: {},
     city: {},
-    filters: {},
-    filteredIds: [],
+    filters: {}
   },
+}
+
+export const filteredIds = (stateHouse) => {
+  let filteredIds = []
+  const filters = removeEmptyAttributes(stateHouse.filters)
+
+  if (Object.keys(filters).length) {
+    Object.keys(filters).forEach((filter) => {
+      const value = filters[filter]
+      filteredIds = !filteredIds.length
+        ? stateHouse[filter][value]
+        : intersection(
+          filteredIds,
+          stateHouse[filter][value],
+        )
+    })
+    console.log('filteredIds', filteredIds)
+    return filteredIds
+  } else {
+    return stateHouse.allIds
+  }
 }
 
 export const housesSlice = createSlice({
@@ -33,20 +53,6 @@ export const housesSlice = createSlice({
   reducers: {
     updateFilters: (state, action) => {
       state.houses.filters = removeEmptyAttributes(action.payload)
-      state.houses.filteredIds = []
-      if (Object.keys(state.houses.filters).length) {
-        Object.keys(state.houses.filters).forEach((filter) => {
-          const value = state.houses.filters[filter]
-          state.houses.filteredIds = !state.houses.filteredIds.length
-            ? state.houses[filter][value]
-            : intersection(
-                state.houses.filteredIds,
-                state.houses[filter][value],
-              )
-        })
-      } else {
-        state.houses.filteredIds = state.houses.allIds
-      }
     },
   },
   extraReducers: (builder) => {
@@ -74,9 +80,6 @@ export const housesSlice = createSlice({
           }
         }
       })
-      if (!Object.keys(state.houses.filters).length) {
-        state.houses.filteredIds = state.houses.allIds
-      }
     })
     builder.addCase(getHouses.rejected, (state) => {
       state.reqStatus = 'failed'
