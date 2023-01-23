@@ -2,14 +2,21 @@ import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import { urls } from '../constants'
 import { intersection, removeEmptyAttributes } from '../helpers'
 
-export const getHouses = createAsyncThunk('houses/getHouses', async () => {
-  const res = await fetch(urls.houses)
-  const data = await res.json()
-  return data
-})
+export const getHouses = createAsyncThunk(
+  'houses/getHouses',
+  async (options = { page: 1, limit: 9 }) => {
+    const { page, limit } = options
+    const res = await fetch(`${urls.houses}?_page=${page}&_limit=${limit}`)
+    const body = await res.json()
+    const counterItems = await res.headers.get('X-Total-Count')
+    const hasMore = page * limit <= counterItems
+    return { body, hasMore }
+  },
+)
 
 const initialState = {
   reqStatus: 'initial',
+  hasMore: true,
   houses: {
     byId: {},
     allIds: [],
@@ -48,7 +55,8 @@ export const housesSlice = createSlice({
     })
     builder.addCase(getHouses.fulfilled, (state, action) => {
       state.reqStatus = 'success'
-      action.payload.forEach((house) => {
+      state.hasMore = action.payload.hasMore
+      action.payload.body.forEach((house) => {
         state.houses.byId[house.id] = house
         if (!state.houses.allIds.includes(house.id)) {
           state.houses.allIds.push(house.id)

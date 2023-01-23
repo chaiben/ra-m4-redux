@@ -1,15 +1,17 @@
 import React, { useState } from 'react'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import styled from 'styled-components'
 import { Button } from '../atoms'
 import { HouseCard } from '../molecules'
 import { FlexBox, Grid } from '../../styles'
+import { getHouses } from '../../store/houses.slice'
 
 const HousesStyled = styled(FlexBox)``
 
 function Houses() {
-  const { houses, reqStatus } = useSelector((state) => state.houses)
   const [currentPage, setCurrentPage] = useState(1)
+  const { houses, reqStatus, hasMore } = useSelector((state) => state.houses)
+  const dispatch = useDispatch()
 
   return (
     <HousesStyled>
@@ -29,12 +31,17 @@ function Houses() {
         </Grid>
       )}
       <FlexBox align="center">
-        <Button
-          style={{ marginTop: '2rem' }}
-          onClick={() => setCurrentPage(currentPage + 1)}
-        >
-          Load more
-        </Button>
+        {hasMore && (
+          <Button
+            style={{ marginTop: '2rem' }}
+            onClick={() => {
+              setCurrentPage(currentPage + 1)
+              dispatch(getHouses({ page: currentPage, limit: 9 }))
+            }}
+          >
+            Load more
+          </Button>
+        )}
       </FlexBox>
     </HousesStyled>
   )
