@@ -37,6 +37,8 @@ export const housesSlice = createSlice({
                 state.houses[filter][value],
               )
         })
+      } else {
+        state.houses.filteredIds = state.houses.allIds
       }
     },
   },
@@ -64,6 +66,9 @@ export const housesSlice = createSlice({
           }
         }
       })
+      if (!Object.keys(state.houses.filters).length) {
+        state.houses.filteredIds = state.houses.allIds
+      }
     })
     builder.addCase(getHouses.rejected, (state) => {
       state.reqStatus = 'failed'

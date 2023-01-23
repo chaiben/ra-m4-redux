@@ -5,11 +5,10 @@ import { Text } from '../components/atoms'
 
 function Data() {
   const houses = useSelector((state) => state.houses.houses)
-  const { allIds, byId, filteredIds, filters } = houses
-  const housesId = !Object.keys(filters).length ? allIds : filteredIds
+  const { byId, filteredIds } = houses
   return (
     <Body>
-      {housesId.map((id) => (
+      {filteredIds.map((id) => (
         <Text key={`dato${id}`}>
           {byId[id].title} - Type = {byId[id].type} - City = {byId[id].city}
         </Text>

@@ -1,35 +1,28 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
+import { useSelector } from 'react-redux'
 import styled from 'styled-components'
 import { Button } from '../atoms'
 import { HouseCard } from '../molecules'
-import { useFetch } from '../../hooks'
 import { FlexBox, Grid } from '../../styles'
-import { urls } from '../../constants'
 
 const HousesStyled = styled(FlexBox)``
 
 function Houses() {
-  const [houses, setHouses] = useState([])
+  const { houses, reqStatus } = useSelector((state) => state.houses)
   const [currentPage, setCurrentPage] = useState(1)
-  const { data, loading, isError, isSuccess } = useFetch(urls.houses)
-
-  useEffect(() => {
-    if (!data) return
-    setHouses(data)
-  }, [data])
 
   return (
     <HousesStyled>
-      {loading && <div>Loading...</div>}
-      {isError && <div>Error</div>}
-      {isSuccess && (
+      {reqStatus === 'loading' && <div>Loading...</div>}
+      {reqStatus === 'failed' && <div>Error</div>}
+      {reqStatus === 'success' && (
         <Grid gridGap="32px">
-          {houses.map((house) => (
+          {houses.filteredIds.map((id) => (
             <HouseCard
-              key={house.id}
-              title={house.title}
-              price={`${house.price}€`}
-              img={house.image}
+              key={id}
+              title={houses.byId[id].title}
+              price={`${houses.byId[id].price}€`}
+              img={houses.byId[id].image}
               link=""
             />
           ))}
