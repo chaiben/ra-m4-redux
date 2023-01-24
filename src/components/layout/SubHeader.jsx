@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import styled from 'styled-components'
 import { formatOptions } from '../../helpers/'
-import { getHouses, updateFilters } from '../../store/houses.slice'
+import { getHouses, setCity, setType } from '../../store/houses.slice'
 import { colors, Container, dimensions, FlexBox } from '../../styles'
 import { Button, Icon } from '../atoms'
 import { SelectGroup } from '../molecules'
@@ -42,9 +42,14 @@ function SubHeader({ ...props }) {
   }
 
   const onClickSearchForm = () => {
-    // Guardo en la store una cópia del valor del filtro.
-    dispatch(updateFilters({ ...formFilters }))
+    dispatch(setCity(formFilters['city']))
+    dispatch(setType(formFilters['type']))
   }
+
+  useEffect(() => {
+    dispatch(setCity(formFilters['city']))
+    dispatch(setType(formFilters['type']))
+  }, [houses.allIds])
 
   useEffect(() => {
     dispatch(getHouses())
@@ -60,7 +65,7 @@ function SubHeader({ ...props }) {
             defaultText="Piso, chalet o garaje..."
             hideLabel
             onChange={onChangeFormFilter}
-            options={formatOptions(Object.keys(houses.type))}
+            options={formatOptions(Object.keys(houses.byType))}
           />
 
           <SelectGroup
@@ -69,7 +74,7 @@ function SubHeader({ ...props }) {
             defaultText="Madrid, Barcelona o Zaragoza..."
             hideLabel
             onChange={onChangeFormFilter}
-            options={formatOptions(Object.keys(houses.city))}
+            options={formatOptions(Object.keys(houses.byCity))}
           />
 
           <Button onClick={onClickSearchForm}>

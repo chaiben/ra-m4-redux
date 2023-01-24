@@ -4,26 +4,30 @@ import styled from 'styled-components'
 import { Button } from '../atoms'
 import { HouseCard } from '../molecules'
 import { FlexBox, Grid } from '../../styles'
-import { filteredIds, getHouses } from '../../store/houses.slice'
+import { getHouses } from '../../store/houses.slice'
 import { useEffect } from 'react'
+import { filterHouses } from '../../helpers'
 
 const HousesStyled = styled(FlexBox)``
 
 function Houses() {
   const [currentPage, setCurrentPage] = useState(1)
-  const { houses, reqStatus, hasMore } = useSelector((state) => state.houses)
+  const { houses, hasMore, filters, isLoading, isError, isSuccess } =
+    useSelector((state) => state.houses)
+  const filteredHouses = filterHouses(houses.allIds, filters.city, filters.type)
   const dispatch = useDispatch()
+
   useEffect(() => {
     dispatch(getHouses({ page: currentPage, limit: 9 }))
   }, [dispatch, currentPage])
 
   return (
     <HousesStyled>
-      {reqStatus === 'loading' && <div>Loading...</div>}
-      {reqStatus === 'failed' && <div>Error</div>}
-      {reqStatus === 'success' && (
+      {isLoading && <div>Loading...</div>}
+      {isError && <div>Error</div>}
+      {isSuccess && (
         <Grid gridGap="32px">
-          {filteredIds(houses).map((id) => (
+          {filteredHouses.map((id) => (
             <HouseCard
               key={id}
               title={houses.byId[id].title}
