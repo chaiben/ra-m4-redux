@@ -65,7 +65,7 @@ function SubHeader({ ...props }) {
             defaultText="Piso, chalet o garaje..."
             hideLabel
             onChange={onChangeFormFilter}
-            options={formatOptions(Object.keys(houses.byType))}
+            options={formatOptions(houses.types)}
           />
 
           <SelectGroup
@@ -74,7 +74,7 @@ function SubHeader({ ...props }) {
             defaultText="Madrid, Barcelona o Zaragoza..."
             hideLabel
             onChange={onChangeFormFilter}
-            options={formatOptions(Object.keys(houses.byCity))}
+            options={formatOptions(houses.cities)}
           />
 
           <Button onClick={onClickSearchForm}>

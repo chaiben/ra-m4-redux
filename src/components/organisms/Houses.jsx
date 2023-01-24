@@ -12,9 +12,9 @@ const HousesStyled = styled(FlexBox)``
 
 function Houses() {
   const [currentPage, setCurrentPage] = useState(1)
-  const { houses, hasMore, filters, isLoading, isError, isSuccess } =
-    useSelector((state) => state.houses)
-  const filteredHouses = filterHouses(houses.allIds, filters.city, filters.type)
+  const { houses, hasMore, isLoading, isError, isSuccess } = useSelector(
+    (state) => state.houses,
+  )
   const dispatch = useDispatch()
 
   useEffect(() => {
@@ -27,15 +27,23 @@ function Houses() {
       {isError && <div>Error</div>}
       {isSuccess && (
         <Grid gridGap="32px">
-          {filteredHouses.map((id) => (
-            <HouseCard
-              key={id}
-              title={houses.byId[id].title}
-              price={`${houses.byId[id].price}€`}
-              img={houses.byId[id].image}
-              link=""
-            />
-          ))}
+          {houses.allIds
+            .filter((id) =>
+              filterHouses(
+                houses.byId[id],
+                houses.filterByCity,
+                houses.filterByType,
+              ),
+            )
+            .map((id) => (
+              <HouseCard
+                key={id}
+                title={houses.byId[id].title}
+                price={`${houses.byId[id].price}€`}
+                img={houses.byId[id].image}
+                link=""
+              />
+            ))}
         </Grid>
       )}
       <FlexBox align="center">

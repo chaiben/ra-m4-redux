@@ -28,12 +28,10 @@ const initialState = {
   houses: {
     byId: {},
     allIds: [],
-    byType: {},
-    byCity: {},
-  },
-  filters: {
-    city: null,
-    type: null
+    filterByType: null,
+    filterByCity: null,
+    cities: [],
+    types: []
   }
 }
 
@@ -42,10 +40,10 @@ export const housesSlice = createSlice({
   initialState,
   reducers: {
     setCity: (state, action) => {
-      (action.payload) ? state.filters.city = state.houses.byCity[action.payload] : state.filters.city = null
+      state.houses.filterByCity = (action.payload) ? action.payload : null
     },
     setType: (state, action) => {
-      (action.payload) ? state.filters.type = state.houses.byType[action.payload] : state.filters.type = null
+      state.houses.filterByType = (action.payload) ? action.payload : null
     },
   },
   extraReducers: (builder) => {
@@ -67,17 +65,14 @@ export const housesSlice = createSlice({
         if (!state.houses.allIds.includes(house.id)) {
           state.houses.allIds.push(house.id)
 
-          if (state.houses.byType[house.type] === undefined) {
-            state.houses.byType[house.type] = [house.id]
-          } else {
-            state.houses.byType[house.type].push(house.id)
+          if (!state.houses.types.includes(house.type)) {
+            state.houses.types.push(house.type)
           }
 
-          if (state.houses.byCity[house.city] === undefined) {
-            state.houses.byCity[house.city] = [house.id]
-          } else {
-            state.houses.byCity[house.city].push(house.id)
+          if (!state.houses.cities.includes(house.city)) {
+            state.houses.cities.push(house.city)
           }
+
         }
       })
     })

@@ -1,7 +1,8 @@
 import { capitalize } from "./"
 
-const formatOptions = (valuesArray) => {
-  return valuesArray
+const formatOptions = (valuesArray = []) => {
+  const newValue = [...valuesArray]
+  return newValue
     .sort()
     .map((element) => ({
       value: element,

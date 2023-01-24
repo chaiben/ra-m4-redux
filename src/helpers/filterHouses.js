@@ -1,15 +1,15 @@
-function filterArray(value, searchArray = null) {
-  if (!searchArray) {
-    return value;
-  } else {
-    return searchArray.includes(value);
-  }
+const filterByCity = (house, city) => {
+  if (city === null) return true
+  return house.city === city
 }
 
-const filterHouses = (houses, city, type) => {
-  return houses
-    .filter((house) => filterArray(house, city))
-    .filter((house) => filterArray(house, type))
+const filterByType = (house, type) => {
+  if (type === null) return true
+  return house.type === type
+}
+
+const filterHouses = (house, city, type) => {
+  return filterByCity(house, city) && filterByType(house, type)
 }
 
 export default filterHouses
