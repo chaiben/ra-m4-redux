@@ -47,11 +47,6 @@ function SubHeader({ ...props }) {
   }
 
   useEffect(() => {
-    dispatch(setCity(formFilters['city']))
-    dispatch(setType(formFilters['type']))
-  }, [houses.allIds])
-
-  useEffect(() => {
     dispatch(getHouses())
   }, [dispatch])
 
