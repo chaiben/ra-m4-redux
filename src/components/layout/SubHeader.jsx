@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import styled from 'styled-components'
-import { capitalize } from '../../helpers/'
+import { formatOptions } from '../../helpers/'
 import { getHouses, updateFilters } from '../../store/houses.slice'
 import { colors, Container, dimensions, FlexBox } from '../../styles'
 import { Button, Icon } from '../atoms'
@@ -60,12 +60,7 @@ function SubHeader({ ...props }) {
             defaultText="Piso, chalet o garaje..."
             hideLabel
             onChange={onChangeFormFilter}
-            options={Object.keys(houses.type)
-              .sort()
-              .map((element) => ({
-                value: element,
-                text: capitalize(element),
-              }))}
+            options={formatOptions(Object.keys(houses.type))}
           />
 
           <SelectGroup
@@ -74,12 +69,7 @@ function SubHeader({ ...props }) {
             defaultText="Madrid, Barcelona o Zaragoza..."
             hideLabel
             onChange={onChangeFormFilter}
-            options={Object.keys(houses.city)
-              .sort()
-              .map((element) => ({
-                value: element,
-                text: capitalize(element),
-              }))}
+            options={formatOptions(Object.keys(houses.city))}
           />
 
           <Button onClick={onClickSearchForm}>
