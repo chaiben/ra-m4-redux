@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import styled from 'styled-components'
-import { formatOptions } from '../../helpers/'
+import { formatOptions } from '../../helpers'
 import { getHouses, setCity, setType } from '../../store/houses.slice'
 import { colors, Container, dimensions, FlexBox } from '../../styles'
 import { Button, Icon } from '../atoms'
@@ -36,14 +36,15 @@ function SubHeader({ ...props }) {
 
   const onChangeFormFilter = (event) => {
     setFormFilters((prevFormFilters) => {
-      prevFormFilters[event.target.id] = event.target.value
-      return prevFormFilters
+      const newFormFilters = { ...prevFormFilters }
+      newFormFilters[event.target.id] = event.target.value
+      return newFormFilters
     })
   }
 
   const onClickSearchForm = () => {
-    dispatch(setCity(formFilters['city']))
-    dispatch(setType(formFilters['type']))
+    dispatch(setCity(formFilters.city))
+    dispatch(setType(formFilters.type))
   }
 
   useEffect(() => {

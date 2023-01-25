@@ -1,11 +1,10 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import styled from 'styled-components'
 import { Button } from '../atoms'
 import { HouseCard } from '../molecules'
 import { FlexBox, Grid } from '../../styles'
 import { getHouses } from '../../store/houses.slice'
-import { useEffect } from 'react'
 import { filterHouses } from '../../helpers'
 
 const HousesStyled = styled(FlexBox)``

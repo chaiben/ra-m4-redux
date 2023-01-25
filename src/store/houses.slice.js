@@ -1,9 +1,9 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import { urls } from '../constants'
-import { intersection, removeEmptyAttributes } from '../helpers'
 
 export const getHouses = createAsyncThunk(
   'houses/getHouses',
+  // eslint-disable-next-line default-param-last
   async (options = { page: 1, limit: 9 }, { rejectWithValue }) => {
     const { page, limit } = options
     try {
@@ -13,8 +13,7 @@ export const getHouses = createAsyncThunk(
       const hasMore = page * limit <= counterItems
       return { body, hasMore }
     } catch (err) {
-      console.log('Error to load houseList: ', err)
-      return rejectWithValue("Error to load houseList")
+      return rejectWithValue('Error to load houseList')
     }
   },
 )
@@ -31,8 +30,8 @@ const initialState = {
     filterByType: null,
     filterByCity: null,
     cities: [],
-    types: []
-  }
+    types: [],
+  },
 }
 
 export const housesSlice = createSlice({
@@ -40,10 +39,10 @@ export const housesSlice = createSlice({
   initialState,
   reducers: {
     setCity: (state, action) => {
-      state.houses.filterByCity = (action.payload) ? action.payload : null
+      state.houses.filterByCity = action.payload ? action.payload : null
     },
     setType: (state, action) => {
-      state.houses.filterByType = (action.payload) ? action.payload : null
+      state.houses.filterByType = action.payload ? action.payload : null
     },
   },
   extraReducers: (builder) => {
@@ -72,7 +71,6 @@ export const housesSlice = createSlice({
           if (!state.houses.cities.includes(house.city)) {
             state.houses.cities.push(house.city)
           }
-
         }
       })
     })

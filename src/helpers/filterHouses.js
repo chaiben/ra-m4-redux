@@ -8,8 +8,7 @@ const filterByType = (house, type) => {
   return house.type === type
 }
 
-const filterHouses = (house, city, type) => {
-  return filterByCity(house, city) && filterByType(house, type)
-}
+const filterHouses = (house, city, type) =>
+  filterByCity(house, city) && filterByType(house, type)
 
 export default filterHouses

@@ -4,8 +4,8 @@ const initialState = {
   name: 'marçal',
   surnames: {
     first: 'chaiben',
-    second: 'machado'
-  }
+    second: 'machado',
+  },
 }
 
 export const userSlice = createSlice({
@@ -22,9 +22,10 @@ export const userSlice = createSlice({
       state.surnames.second = action.payload
     },
   },
-},)
+})
 
 // Action creators are generated for each case reducer function
-export const { updateName, updateFirstSurname, updateSecondSurname } = userSlice.actions
+export const { updateName, updateFirstSurname, updateSecondSurname } =
+  userSlice.actions
 
 export default userSlice.reducer

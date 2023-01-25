@@ -5,8 +5,7 @@ import { Provider } from 'react-redux'
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 import { Home, Data, Profile } from './pages'
 import { paths } from './constants'
-import { store } from './store/store'
-import { updateName } from './store/user.slice'
+import store from './store/store'
 
 const router = createBrowserRouter([
   {
